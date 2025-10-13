@@ -165,3 +165,24 @@ spawn(function()
 	local player = game.Players.LocalPlayer
 	TeleportService:Teleport(game.PlaceId, player)
 end)
+
+local CoreGui = game:GetService("CoreGui")
+
+-- Table of CoreGui elements to remove
+local elementsToRemove = {
+    "PlayerList",   -- Leaderboard
+    "Chat",         -- Chat
+    "Microphone",   -- Mic icon
+    "RobloxGui"     -- Roblox menu (includes icon & three lines)
+}
+
+for _, elementName in pairs(elementsToRemove) do
+    local obj = CoreGui:FindFirstChild(elementName)
+    if obj then
+        local success, err = pcall(function()
+            obj:Destroy()
+        end)
+    end
+    wait(1) -- wait 1 second before moving to the next element
+end
+
