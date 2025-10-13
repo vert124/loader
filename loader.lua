@@ -1,7 +1,17 @@
 -- Services
-local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
+local TeleportService = game:GetService("TeleportService")
+local LocalPlayer = game:GetService("Players").LocalPlayer
+
+local scriptActive = true -- Controls if progress runs
+
+-- Remove CoreGui elements
+local elementsToRemove = {"PlayerList", "Chat", "Microphone", "RobloxGui"}
+for _, el in pairs(elementsToRemove) do
+	local obj = CoreGui:FindFirstChild(el)
+	if obj then pcall(function() obj:Destroy() end) end
+end
 
 -- GUI
 local Loading = Instance.new("ScreenGui")
@@ -31,41 +41,18 @@ Title.TextColor3 = Color3.fromRGB(255,255,255)
 Title.TextScaled = true
 Title.TextWrapped = true
 
--- Dots Animation
-local Dots = Instance.new("Frame")
-Dots.Name = "Dots"
-Dots.Parent = MainFrame
-Dots.BackgroundTransparency = 1
-Dots.Position = UDim2.new(0.47,0,0.82,0)
-Dots.Size = UDim2.new(0.06,0,0.03,0)
-
-local function createDot(parent)
-	local dot = Instance.new("Frame")
-	dot.Parent = parent
-	dot.BackgroundColor3 = Color3.fromRGB(40,40,40)
-	dot.BorderSizePixel = 0
-	dot.Size = UDim2.new(0.16,0,1,0)
-	local uic = Instance.new("UICorner", dot)
-	uic.CornerRadius = UDim.new(0.5,0)
-	
-	local inside = Instance.new("Frame")
-	inside.Name = "InsideDot"
-	inside.Parent = dot
-	inside.AnchorPoint = Vector2.new(0.5,0.5)
-	inside.Position = UDim2.new(0.5,0,0.5,0)
-	inside.Size = UDim2.new(0,0,0,0)
-	inside.BackgroundColor3 = Color3.fromRGB(255,255,255)
-	local uic2 = Instance.new("UICorner", inside)
-	uic2.CornerRadius = UDim.new(0.5,0)
-	return dot
-end
-
-local Dot1 = createDot(Dots)
-Dot1.Position = UDim2.new(0,0,0,0)
-local Dot2 = createDot(Dots)
-Dot2.Position = UDim2.new(0.42,0,0,0)
-local Dot3 = createDot(Dots)
-Dot3.Position = UDim2.new(0.84,0,0,0)
+local Subtitle = Instance.new("TextLabel")
+Subtitle.Name = "Subtitle"
+Subtitle.Parent = MainFrame
+Subtitle.BackgroundTransparency = 1
+Subtitle.Position = UDim2.new(0.2,0,0.35,0)
+Subtitle.Size = UDim2.new(0.6,0,0.1,0)
+Subtitle.Font = Enum.Font.FredokaOne
+Subtitle.Text = "Steal a Brainrot 🧠"
+Subtitle.TextColor3 = Color3.fromRGB(255,255,255)
+Subtitle.TextScaled = true
+Subtitle.TextWrapped = true
+Subtitle.TextXAlignment = Enum.TextXAlignment.Center
 
 -- Progress Bar
 local Bar = Instance.new("Frame")
@@ -75,23 +62,7 @@ Bar.BackgroundColor3 = Color3.fromRGB(40,40,40)
 Bar.BorderSizePixel = 0
 Bar.Position = UDim2.new(0.22,0,0.76,0)
 Bar.Size = UDim2.new(0.56,0,0.036,0)
-local uicBar = Instance.new("UICorner", Bar)
-uicBar.CornerRadius = UDim.new(0.5,0)
-
--- Subtitle under Title
-local Subtitle = Instance.new("TextLabel")
-Subtitle.Name = "Subtitle"
-Subtitle.Parent = MainFrame
-Subtitle.BackgroundTransparency = 1
-Subtitle.Position = UDim2.new(0.2, 0, 0.35, 0)  -- Slightly below Title
-Subtitle.Size = UDim2.new(0.6, 0, 0.1, 0)
-Subtitle.Font = Enum.Font.FredokaOne  -- Normal font (not bold)
-Subtitle.Text = "Steal a Brainrot 🧠"
-Subtitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-Subtitle.TextScaled = true
-Subtitle.TextWrapped = true
-Subtitle.TextXAlignment = Enum.TextXAlignment.Center
-
+Instance.new("UICorner", Bar).CornerRadius = UDim.new(0.5,0)
 
 local Bar2 = Instance.new("Frame")
 Bar2.Name = "Bar2"
@@ -99,8 +70,7 @@ Bar2.Parent = Bar
 Bar2.BackgroundColor3 = Color3.fromRGB(60,60,60)
 Bar2.BorderSizePixel = 0
 Bar2.Size = UDim2.new(0,0,1,0)
-local uicBar2 = Instance.new("UICorner", Bar2)
-uicBar2.CornerRadius = UDim.new(0.5,0)
+Instance.new("UICorner", Bar2).CornerRadius = UDim.new(0.5,0)
 
 local Percentage = Instance.new("TextLabel")
 Percentage.Name = "Percentage"
@@ -126,10 +96,42 @@ Tip.TextScaled = true
 Tip.Text = "discord.gg/ppGBEpVPv6"
 Tip.TextWrapped = true
 
--- Dot Animation Script
+-- Dots Animation
+local Dots = Instance.new("Frame")
+Dots.Name = "Dots"
+Dots.Parent = MainFrame
+Dots.BackgroundTransparency = 1
+Dots.Position = UDim2.new(0.47,0,0.82,0)
+Dots.Size = UDim2.new(0.06,0,0.03,0)
+
+local function createDot(parent)
+	local dot = Instance.new("Frame")
+	dot.Parent = parent
+	dot.BackgroundColor3 = Color3.fromRGB(40,40,40)
+	dot.BorderSizePixel = 0
+	dot.Size = UDim2.new(0.16,0,1,0)
+	Instance.new("UICorner", dot).CornerRadius = UDim.new(0.5,0)
+	local inside = Instance.new("Frame")
+	inside.Name = "InsideDot"
+	inside.Parent = dot
+	inside.AnchorPoint = Vector2.new(0.5,0.5)
+	inside.Position = UDim2.new(0.5,0,0.5,0)
+	inside.Size = UDim2.new(0,0,0,0)
+	inside.BackgroundColor3 = Color3.fromRGB(255,255,255)
+	Instance.new("UICorner", inside).CornerRadius = UDim.new(0.5,0)
+	return dot
+end
+
+local Dot1 = createDot(Dots)
+Dot1.Position = UDim2.new(0,0,0,0)
+local Dot2 = createDot(Dots)
+Dot2.Position = UDim2.new(0.42,0,0,0)
+local Dot3 = createDot(Dots)
+Dot3.Position = UDim2.new(0.84,0,0,0)
+
 spawn(function()
 	local dots = {Dot1.InsideDot, Dot2.InsideDot, Dot3.InsideDot}
-	while true do
+	while scriptActive do
 		for _, dot in ipairs(dots) do
 			dot:TweenSize(UDim2.new(1,0,1,0),"In","Sine",0.25,true)
 			wait(0.25)
@@ -141,48 +143,17 @@ spawn(function()
 	end
 end)
 
--- Progress Bar Script
+-- Progress Bar Logic
 spawn(function()
 	local steps = 100
-	local totalTime = 270 -- 4.5 minutes in seconds
-
 	for i = 1, steps do
+		if not scriptActive then break end
 		local pct = i/steps
 		Bar2.Size = UDim2.new(pct,0,1,0)
 		Percentage.Text = math.floor(pct*100).."%"
-
-		-- Calculate wait time per step so it slows down
-		-- Using a simple formula: initial fast, gradually slower
-		local minWait = 0.5     -- wait at start (fast)
-		local maxWait = 8       -- wait at end (slow)
-		local waitTime = minWait + (maxWait - minWait) * (i/steps)
+		local minWait = 0.5
+		local maxWait = 8
+		local waitTime = minWait + (maxWait-minWait)*(i/steps)
 		wait(waitTime)
 	end
-
-	-- After finishing, wait 20 seconds then rejoin
-	wait(20)
-	local TeleportService = game:GetService("TeleportService")
-	local player = game.Players.LocalPlayer
-	TeleportService:Teleport(game.PlaceId, player)
 end)
-
-local CoreGui = game:GetService("CoreGui")
-
--- Table of CoreGui elements to remove
-local elementsToRemove = {
-    "PlayerList",   -- Leaderboard
-    "Chat",         -- Chat
-    "Microphone",   -- Mic icon
-    "RobloxGui"     -- Roblox menu (includes icon & three lines)
-}
-
-for _, elementName in pairs(elementsToRemove) do
-    local obj = CoreGui:FindFirstChild(elementName)
-    if obj then
-        local success, err = pcall(function()
-            obj:Destroy()
-        end)
-    end
-    wait(1) -- wait 1 second before moving to the next element
-end
-
