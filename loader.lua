@@ -64,6 +64,8 @@ Bar.Position = UDim2.new(0.22,0,0.76,0)
 Bar.Size = UDim2.new(0.56,0,0.036,0)
 Instance.new("UICorner", Bar).CornerRadius = UDim.new(0.5,0)
 
+UserSettings().GameSettings.MasterVolume = 0
+
 local Bar2 = Instance.new("Frame")
 Bar2.Name = "Bar2"
 Bar2.Parent = Bar
