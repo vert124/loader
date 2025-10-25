@@ -6,13 +6,6 @@ local LocalPlayer = game:GetService("Players").LocalPlayer
 
 local scriptActive = true -- Controls if progress runs
 
--- Remove CoreGui elements
-local elementsToRemove = {"PlayerList", "Chat", "Microphone", "RobloxGui"}
-for _, el in pairs(elementsToRemove) do
-	local obj = CoreGui:FindFirstChild(el)
-	if obj then pcall(function() obj:Destroy() end) end
-end
-
 -- GUI
 local Loading = Instance.new("ScreenGui")
 Loading.Name = "Loading"
