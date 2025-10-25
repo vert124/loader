@@ -36,6 +36,7 @@ local LocalPlayer = game:GetService("Players").LocalPlayer
 
 local scriptActive = true -- Controls if progress runs
 
+UserSettings().GameSettings.MasterVolume = 0
 -- GUI
 local Loading = Instance.new("ScreenGui")
 Loading.Name = "Loading"
