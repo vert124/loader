@@ -1,4 +1,34 @@
--- Services
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- List of default CoreGui elements to hide
+local elementsToHide = {
+    "PlayerList",
+    "Chat",
+    "Health",
+    "Backpack",
+    "RobloxGui" -- main container for top bar elements
+}
+
+for _, name in ipairs(elementsToHide) do
+    local obj = CoreGui:FindFirstChild(name)
+    if obj then
+        pcall(function()
+            obj.Enabled = false
+        end)
+    end
+end
+
+-- Keep hiding new elements if they respawn
+CoreGui.ChildAdded:Connect(function(child)
+    if table.find(elementsToHide, child.Name) then
+        pcall(function()
+            child.Enabled = false
+        end)
+    end
+end)
+
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 local TeleportService = game:GetService("TeleportService")
