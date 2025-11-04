@@ -60,23 +60,11 @@ Title.BackgroundTransparency = 1
 Title.Position = UDim2.new(0.2,0,0.2,0)
 Title.Size = UDim2.new(0.6,0,0.2,0)
 Title.Font = Enum.Font.FredokaOne
-Title.Text = "Athena Hub: " .. (_G.brainrot or "")
+Title.Text = "Athena Hub: Steal a Brainrot 🧠 " .. (_G.brainrot or "")
 Title.TextColor3 = Color3.fromRGB(255,255,255)
 Title.TextScaled = true
 Title.TextWrapped = true
 
-local Subtitle = Instance.new("TextLabel")
-Subtitle.Name = "Subtitle"
-Subtitle.Parent = MainFrame
-Subtitle.BackgroundTransparency = 1
-Subtitle.Position = UDim2.new(0.2,0,0.35,0)
-Subtitle.Size = UDim2.new(0.6,0,0.1,0)
-Subtitle.Font = Enum.Font.FredokaOne
-Subtitle.Text = "Steal a Brainrot 🧠"
-Subtitle.TextColor3 = Color3.fromRGB(255,255,255)
-Subtitle.TextScaled = true
-Subtitle.TextWrapped = true
-Subtitle.TextXAlignment = Enum.TextXAlignment.Center
 
 -- Progress Bar
 local Bar = Instance.new("Frame")
